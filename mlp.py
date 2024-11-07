@@ -12,6 +12,14 @@ def sigmoid_derivative(x):
     """Calculation of the sigmoid derivative function for a numpy array """
     return sigmoid(x) * (1 - sigmoid(x))
 
+def softmax(x):
+    """
+    Compute the softmax of each row of the input x.
+    Each row represents a set of scores, and softmax normalizes them into probabilities.
+    """
+    exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))  # Subtract max for numerical stability
+    return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+
 
 def learn_once_mse(w1,b1,w2,b2,data,targets,learning_rate):
     """
@@ -82,7 +90,7 @@ def learn_once_cross_entropy(w1,b1,w2,b2,data,labels_train,learning_rate):
     z1 = np.matmul(a0, w1) + b1  # Input to the hidden layer
     a1 = sigmoid(z1)  # Output of the hidden layer
     z2 = np.matmul(a1, w2) + b2  # Input to the output layer
-    a2 = sigmoid(z2)  # Output of the output layer
+    a2 = softmax(z2)  # Output of the output layer
     y_pred = a2  # Predictions
 
     y = one_hot(labels_train,y_pred.shape)
