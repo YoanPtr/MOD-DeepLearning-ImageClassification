@@ -17,7 +17,7 @@ def learn_once_mse(w1,b1,w2,b2,data,targets,learning_rate):
     """
     Perform one gradient descent step using MSE loss
     """
-    a0 = data_train  # Input to the first layer
+    a0 = data  # Input to the first layer
     z1 = np.matmul(a0, w1) + b1  # Input to the hidden layer
     a1 = sigmoid(z1)  # Output of the hidden layer
     z2 = np.matmul(a1, w2) + b2  # Input to the output layer
@@ -51,11 +51,11 @@ def learn_once_mse(w1,b1,w2,b2,data,targets,learning_rate):
 
     return w1,b1,w2,b2,loss
 
-def one_hot(labels):
+def one_hot(labels,y_pred):
     """
     Perform one hot encoding for the n labels of the dataset
     """
-    one_hot_array = np.zeros((len(labels),np.max(labels) + 1))
+    one_hot_array = np.zeros(y_pred)
 
     for i in range(len(labels)):
         one_hot_array[i,labels[i]] = 1
@@ -78,14 +78,14 @@ def learn_once_cross_entropy(w1,b1,w2,b2,data,labels_train,learning_rate):
     Perform one gradient descent step using cross entropy loss
     """
 
-    a0 = data_train  # Input to the first layer
+    a0 = data  # Input to the first layer
     z1 = np.matmul(a0, w1) + b1  # Input to the hidden layer
     a1 = sigmoid(z1)  # Output of the hidden layer
     z2 = np.matmul(a1, w2) + b2  # Input to the output layer
     a2 = sigmoid(z2)  # Output of the output layer
     y_pred = a2  # Predictions
 
-    y = one_hot(labels_train)
+    y = one_hot(labels_train,y_pred.shape)
 
     loss = cross_entropy(y_pred, y)
     d_loss_z2 = a2 - y
@@ -110,7 +110,7 @@ def learn_once_cross_entropy(w1,b1,w2,b2,data,labels_train,learning_rate):
 
     return w1, b1, w2, b2, loss
 
-def train_mlp(w1, b1, w2, b2, data_train, labels_train, learning_rate, num_epoch):
+def train_mlp(w1, b1, w2, b2, data, labels_train, learning_rate, num_epoch):
     """
     Run num_epoch batches of gradient descent step using cross entropy loss to train the model
     Return train weights and accuracy of the model on training data
@@ -120,10 +120,10 @@ def train_mlp(w1, b1, w2, b2, data_train, labels_train, learning_rate, num_epoch
 
     for i in range(num_epoch):
         # Perform one step of learning with cross-entropy loss
-        w1, b1, w2, b2, loss = learn_once_cross_entropy(w1, b1, w2, b2, data_train, labels_train, learning_rate)
+        w1, b1, w2, b2, loss = learn_once_cross_entropy(w1, b1, w2, b2, data, labels_train, learning_rate)
 
         # Forward pass to compute predictions
-        a0 = data_train  # Input to the first layer
+        a0 = data # Input to the first layer
         z1 = np.matmul(a0, w1) + b1  # Input to the hidden layer
         a1 = sigmoid(z1)  # Output of the hidden layer
         z2 = np.matmul(a1, w2) + b2  # Input to the output layer
@@ -141,12 +141,12 @@ def train_mlp(w1, b1, w2, b2, data_train, labels_train, learning_rate, num_epoch
     return w1, b1, w2, b2, train_accuracies
 
 
-def test_mlp(w1,b1,w2,b2,data_test,labels_test):
+def run_test_mlp(w1,b1,w2,b2,data_test,labels_test):
     """
     Return accuracy of the train model on test data
     """
 
-    a0 = data_train  # Input to the first layer
+    a0 = data_test  # Input to the first layer
     z1 = np.matmul(a0, w1) + b1  # Input to the hidden layer
     a1 = sigmoid(z1)  # Output of the hidden layer
     z2 = np.matmul(a1, w2) + b2  # Input to the output layer
@@ -155,7 +155,7 @@ def test_mlp(w1,b1,w2,b2,data_test,labels_test):
 
     # Compute accuracy
     predict_classes = np.argmax(y_pred, axis=1)
-    accuracy = np.mean(labels_train == predict_classes)
+    accuracy = np.mean(labels_test == predict_classes)
 
     return accuracy,predict_classes
 
@@ -177,7 +177,7 @@ def run_mlp_training(data_train,labels_train,data_test,labels_test,d_h,learning_
 
     w1, b1, w2, b2, train_accuracies = train_mlp(w1, b1, w2, b2, data_train, labels_train, learning_rate, num_epoch)
 
-    accuracy,predict_classes = test_mlp(w1,b1,w2,b2,data_test,labels_test)
+    accuracy,predict_classes = run_test_mlp(w1,b1,w2,b2,data_test,labels_test)
 
     return(train_accuracies,accuracy,predict_classes)
 
