@@ -1,6 +1,24 @@
-# Backpropagation Derivatives
+# TD 1 : Image Classification
 
-## 2. Derivative of the cost with respect to $ A^{(2)} $
+## Prepare the CIFAR dataset
+
+Two functions are available in the `read_cifar.py` file:
+
+- **`read_cifar()`**: Returns all data available in the different batches.
+- **`read_cifar_test()`**: Returns only the data from the `batch_test`, which is useful for testing our code.
+
+## k-NN Classification
+
+This project implements a k-Nearest Neighbors (k-NN) classifier using matrix operations to compute Euclidean distances between the training and testing sets. The k-NN algorithm is evaluated for various values of k, and the accuracy is plotted.
+
+![Accuracy vs k (k-NN)](results/knn.png)
+
+The plot `knn.png` shows the variation of the classification accuracy as a function of the number of neighbors `k`, ranging from 1 to 20. As k increases, the accuracy typically stabilizes or decreases after a certain point, depending on the dataset.
+
+
+## Artificial Neural Network
+
+### 2. Derivative of the cost with respect to $ A^{(2)} $
 
 The derivative of the cost function $ C $ with respect to the output vector $ A^{(2)} $ is given by:
 
@@ -12,7 +30,7 @@ where $ N_{out} $ is the number of output units, $ \hat{y}_i $ is the predicted 
 
 ---
 
-## 3. Derivative of the cost with respect to $ Z^{(2)} $
+### 3. Derivative of the cost with respect to $ Z^{(2)} $
 
 Using the chain rule, the derivative of the cost with respect to the pre-activation output $ Z^{(2)} $ is:
 
@@ -34,7 +52,7 @@ $$
 
 ---
 
-## 4. Derivative of the cost with respect to $ W^{(2)} $
+### 4. Derivative of the cost with respect to $ W^{(2)} $
 
 The derivative of the cost with respect to the weight matrix $ W^{(2)} $ is:
 
@@ -46,7 +64,7 @@ where $ A^{(1)} $ is the activation of the first layer.
 
 ---
 
-## 5. Derivative of the cost with respect to $ B^{(2)} $
+### 5. Derivative of the cost with respect to $ B^{(2)} $
 
 The derivative of the cost with respect to the bias vector $ B^{(2)} $ is:
 
@@ -56,7 +74,7 @@ $$
 
 ---
 
-## 6. Derivative of the cost with respect to $ A^{(1)} $
+### 6. Derivative of the cost with respect to $ A^{(1)} $
 
 The derivative of the cost with respect to the output of the first layer $ A^{(1)} $ is:
 
@@ -68,7 +86,7 @@ where $ W^{(2)} $ is the weight matrix of the second layer.
 
 ---
 
-## 7. Derivative of the cost with respect to $ Z^{(1)} $
+### 7. Derivative of the cost with respect to $ Z^{(1)} $
 
 The derivative of the cost with respect to the pre-activation vector $ Z^{(1)} $ is:
 
@@ -78,7 +96,7 @@ $$
 
 ---
 
-## 8. Derivative of the cost with respect to $ W^{(1)} $
+### 8. Derivative of the cost with respect to $ W^{(1)} $
 
 The derivative of the cost with respect to the weight matrix $ W^{(1)} $ is:
 
@@ -90,7 +108,7 @@ where $ A^{(0)} $ is the input to the network.
 
 ---
 
-## 9. Derivative of the cost with respect to $ B^{(1)} $
+### 9. Derivative of the cost with respect to $ B^{(1)} $
 
 The derivative of the cost with respect to the bias vector $ B^{(1)} $ is:
 
