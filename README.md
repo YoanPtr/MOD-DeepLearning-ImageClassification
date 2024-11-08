@@ -15,7 +15,7 @@ This project implements a k-Nearest Neighbors (k-NN) classifier using matrix ope
 
 ![Accuracy vs k (k-NN)](results/knn.png)
 
-The plot `knn.png` shows the variation of the classification accuracy as a function of the number of neighbors `k`, ranging from 1 to 20. As k increases, the accuracy typically stabilizes or decreases after a certain point, depending on the dataset.
+The plot `knn.png` shows the variation of the classification accuracy as a function of the number of neighbors `k`, ranging from 1 to 20. 
 
 
 ## Artificial Neural Network
