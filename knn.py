@@ -4,24 +4,23 @@ import matplotlib.pyplot as plt
 import os
 
 
-def distance_matrix(M1, M2):
-    """Computes the Euclidean distance matrix between two sets of vectors."""
-    expanded_M1 = np.expand_dims(M1, axis=1)
-    expanded_M2 = np.expand_dims(M2, axis=0)
-
-    squared_diff = np.sum((expanded_M1 - expanded_M2) ** 2, axis=2)
-    dists = np.sqrt(squared_diff)
-
+def distance_matrix(M1, M2) :
+    M1_2 = np.sum(M1**2, axis = 1, keepdims = True)
+    M2_2 = np.sum(M2**2, axis = 1, keepdims = True)
+    M1M2 = np.dot(M1, M2.T)
+    dists = np.sqrt(M1_2 + M2_2.T - 2*M1M2)
     return dists
+
+
 
 
 def knn_predict(dists, labels_train, k):
     """Predicts labels based on k-nearest neighbors algorithm."""
     predicted_labels = []
 
-    for i in range(dists.shape[1]):
+    for i in range(dists.shape[0]):
         # Use argsort to get the indices of sorted distances in ascending order
-        sorted_indices = np.argsort(dists[i, :])[:k]
+        sorted_indices = np.argpartition(dists[i,:], range(k))[:k]
         labels = labels_train[sorted_indices]
 
         # Find the most frequent label among the k-nearest neighbors
@@ -47,10 +46,12 @@ if __name__ == "__main__":
     path = 'data/cifar-10-batches-py/'
     data, labels = read_cifar_test(path)
 
+    data = normalized(data)
+    
     data_train, labels_train, data_test, labels_test = split_dataset(data, labels, 0.9)
 
     # Compute distance matrix once for efficiency
-    dists = distance_matrix(data_train, data_test)
+    dists = distance_matrix(data_test, data_train)
     accuracy = []
 
     # Evaluate for k values from 1 to 20
