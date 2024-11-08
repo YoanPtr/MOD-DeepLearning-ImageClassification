@@ -1,5 +1,7 @@
 # TD 1 : Image Classification
 
+The GitHub of this repository is available at : [https://github.com/YoanPtr/MOD-DeepLearning-ImageClassification.git](https://github.com/YoanPtr/MOD-DeepLearning-ImageClassification.git)
+
 ## Prepare the CIFAR dataset
 
 Two functions are available in the `read_cifar.py` file:
@@ -18,7 +20,9 @@ The plot `knn.png` shows the variation of the classification accuracy as a funct
 
 ## Artificial Neural Network
 
-### 2. Derivative of the cost with respect to $ A^{(2)} $
+### Gradient Descent
+
+#### 2. Derivative of the cost with respect to $ A^{(2)} $
 
 The derivative of the cost function $ C $ with respect to the output vector $ A^{(2)} $ is given by:
 
@@ -30,7 +34,7 @@ where $ N_{out} $ is the number of output units, $ \hat{y}_i $ is the predicted 
 
 ---
 
-### 3. Derivative of the cost with respect to $ Z^{(2)} $
+#### 3. Derivative of the cost with respect to $ Z^{(2)} $
 
 Using the chain rule, the derivative of the cost with respect to the pre-activation output $ Z^{(2)} $ is:
 
@@ -64,7 +68,7 @@ where $ A^{(1)} $ is the activation of the first layer.
 
 ---
 
-### 5. Derivative of the cost with respect to $ B^{(2)} $
+#### 5. Derivative of the cost with respect to $ B^{(2)} $
 
 The derivative of the cost with respect to the bias vector $ B^{(2)} $ is:
 
@@ -86,7 +90,7 @@ where $ W^{(2)} $ is the weight matrix of the second layer.
 
 ---
 
-### 7. Derivative of the cost with respect to $ Z^{(1)} $
+#### 7. Derivative of the cost with respect to $ Z^{(1)} $
 
 The derivative of the cost with respect to the pre-activation vector $ Z^{(1)} $ is:
 
@@ -96,7 +100,7 @@ $$
 
 ---
 
-### 8. Derivative of the cost with respect to $ W^{(1)} $
+#### 8. Derivative of the cost with respect to $ W^{(1)} $
 
 The derivative of the cost with respect to the weight matrix $ W^{(1)} $ is:
 
@@ -117,3 +121,21 @@ $$
 $$
 
 where $ N_{in} $ is the number of input units.
+
+### Optimisation 
+
+First results were not good, with the initial parameters the mlp was saturating at the first epoch. In order to solve this problem I had a normalization function for pixels and change the initialisation of the weight for a smaller initialisation. 
+
+Then I run the test dataset with several learning rate in order to find the best between 0.001 and 0.5. I choose 0.2 and the plot are available in the results folder to explain this choice. 
+
+Finnaly with this neural network, we have a test accuracy between 30 and 35 %, which is not very good but enough to proove that our code work.
+
+### To go further
+
+#### Test 
+
+Some test on mlp are available in te folder tests, I use pytest to run those test. 
+
+#### Deep dive into the classifier
+
+I just ask Chat Gpt with my mlp.py code and the question to see what it was doing. I correct it a bit it's interesting but not really working now. 
