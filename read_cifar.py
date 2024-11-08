@@ -60,10 +60,10 @@ def split_dataset(data,labels,split):
     return data_train,labels_train,data_test,labels_test
 
 def normalized(data):
-    return data / 255.0
+    return (data / 255.0 ) - 0.5
 
 def unnormalized(data):
-    return data * 255.0
+    return 2 * (data * 255.0) 
 
 def get_label(path):
     filepath = os.path.join(path, 'batches.meta')

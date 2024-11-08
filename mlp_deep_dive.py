@@ -7,6 +7,8 @@ from read_cifar import *
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
 
+
+""" Générer principalement par chat GPT mais corrigé après afin de comprendre ce qui était demander dans la suite """
 # LBP Feature Extraction
 def extract_lbp_features(images, radius=1, n_points=8, method='uniform'):
     features = []
@@ -95,7 +97,7 @@ class MLP:
     def sigmoid_derivative(self, x):
         return self.sigmoid(x) * (1 - self.sigmoid(x))
     
-    def softmax(x):
+    def softmax(self, x):
         """
         Compute the softmax of each row of the input x.
         Each row represents a set of scores, and softmax normalizes them into probabilities.
