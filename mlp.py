@@ -76,7 +76,7 @@ def cross_entropy(y, y_pred):
     Function that calculates the cross entropy between predicted
     and target values
     """
-    epsilon = 10 ** (-2)
+    epsilon = 10 ** (-15)
     return -np.sum(y * np.log(y_pred + epsilon)) / float(y_pred.shape[0])
 
 
@@ -96,19 +96,19 @@ def learn_once_cross_entropy(w1,b1,w2,b2,data,labels_train,learning_rate):
     y = one_hot(labels_train,y_pred.shape)
 
     loss = cross_entropy(y_pred, y)
-    d_loss_z2 = a2 - y
+    d_loss_z2 = (a2 - y) / data.shape[0]
 
     # Layer 2
-    d_loss_w2 = np.matmul(a1.T,d_loss_z2 ) / data.shape[0]
-    d_loss_b2 = np.mean(d_loss_z2, axis=0)
+    d_loss_w2 = np.matmul(a1.T,d_loss_z2 ) 
+    d_loss_b2 = np.sum(d_loss_z2, axis=0)
 
     # Layer 1
 
     d_loss_a1 = np.matmul(d_loss_z2 , w2.T)
     d_loss_z1 = d_loss_a1 * a1 * (1 - a1)
 
-    d_loss_w1 = np.matmul(a0.T,d_loss_z1 ) / data.shape[0]
-    d_loss_b1 = np.mean(d_loss_z1, axis=0)
+    d_loss_w1 = np.matmul(a0.T,d_loss_z1 ) 
+    d_loss_b1 = np.sum(d_loss_z1, axis=0)
 
     # Update weights and biases
     w1 -= learning_rate * d_loss_w1
@@ -135,7 +135,7 @@ def train_mlp(w1, b1, w2, b2, data, labels_train, learning_rate, num_epoch):
         z1 = np.matmul(a0, w1) + b1  # Input to the hidden layer
         a1 = sigmoid(z1)  # Output of the hidden layer
         z2 = np.matmul(a1, w2) + b2  # Input to the output layer
-        a2 = sigmoid(z2)  # Output of the output layer
+        a2 = softmax(z2)  # Output of the output layer
         y_pred = a2  # Predictions
 
         # Compute accuracy
@@ -158,7 +158,7 @@ def run_test_mlp(w1,b1,w2,b2,data_test,labels_test):
     z1 = np.matmul(a0, w1) + b1  # Input to the hidden layer
     a1 = sigmoid(z1)  # Output of the hidden layer
     z2 = np.matmul(a1, w2) + b2  # Input to the output layer
-    a2 = sigmoid(z2)  # Output of the output layer
+    a2 = softmax(z2)  # Output of the output layer
     y_pred = a2  # Predictions
 
     # Compute accuracy
@@ -235,25 +235,43 @@ if __name__ == "__main__":
     data = normalized(data)
     split_factor = 0.9
     d_h = 64
-    learning_rate = 0.1
+
     num_epoch = 100
 
     data_train,labels_train,data_test,labels_test = split_dataset(data,labels,0.9)
 
-    train_accuracies,accuracy,predict_classes = run_mlp_training(data_train, labels_train, data_test, labels_test, d_h, learning_rate, num_epoch)
-    plt.axhline(y=accuracy, color='r', linestyle='--', label=f'Test Accuracy: {accuracy:.2f}')
+    #learning_rates = [0.001, 0.01, 0.05, 0.1, 0.2]  # Liste des valeurs de learning rate à tester
+    learning_rates = [0.2]  # Liste des valeurs de learning rate à tester   
+    best_accuracy = 0
+    best_learning_rate = None
+    accuracies_per_lr = {}  # Pour stocker les précisions finales pour chaque taux d'apprentissage
+
+    for lr in learning_rates:
+        print(f"\nTesting learning rate: {lr}")
+
+        train_accuracies, accuracy, predict_classes = run_mlp_training(data_train, labels_train, data_test, labels_test, d_h, lr, num_epoch)
 
 
-    plt.plot(range(1, num_epoch + 1 ), train_accuracies, marker='o')
-    plt.title('MLP Accuracy vs. num_epoch')
+        # Stocker l'accuracy pour le learning rate actuel
+        accuracies_per_lr[lr] = accuracy
+        if accuracy > best_accuracy:
+            best_accuracy = accuracy
+            best_learning_rate = lr
+
+        # Affichage de la courbe d'entraînement pour chaque taux d'apprentissage
+        plt.plot(range(1, num_epoch + 1), train_accuracies, label=f'Learning Rate = {lr}')
+
+    # Afficher la meilleure précision et le meilleur taux d'apprentissage trouvé
+    print(f"\nBest learning rate: {best_learning_rate} with test accuracy: {best_accuracy:.2f}")
+
+    # Affichage des résultats finaux
+    plt.axhline(y=best_accuracy, color='r', linestyle='--', label=f'Best Test Accuracy: {best_accuracy:.2f}')
+    plt.title('MLP Accuracy vs. num_epoch for Different Learning Rates')
     plt.xlabel('num_epoch')
     plt.ylabel('Accuracy')
+    plt.legend(loc="lower right")
     plt.grid(True)
 
-    # Create directory 'results' if it doesn't exist
-    os.makedirs('results', exist_ok=True)
-
-    # Save the plot as knn.png in the results directory
-    plt.savefig('results/mlp.png')
-
-    save_figure(data_test,labels_test,label_names,predict_classes)
+    # Sauvegarder le graphique des précisions pour les différentes valeurs de learning rate
+    plt.savefig('results/mlp_learning_rates.png')
+    plt.show()
